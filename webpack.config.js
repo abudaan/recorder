@@ -1,4 +1,4 @@
-/* eslint @typescript-eslint/no-var-requires: 0 */
+/* eslint-disable */
 
 const path = require("path");
 
