@@ -1,7 +1,7 @@
 import "./styles/index.scss";
 
 const init = async (): Promise<void> => {
-  const s = await navigator.mediaDevices.getUserMedia({
+  const streamMic = await navigator.mediaDevices.getUserMedia({
     audio: {
       echoCancellation: true,
       noiseSuppression: false,
@@ -11,57 +11,67 @@ const init = async (): Promise<void> => {
   });
 
   const audioContext = new AudioContext();
+  const recordingSource = audioContext.createMediaStreamSource(streamMic);
+  const recordingDestination = audioContext.createMediaStreamDestination();
+  recordingSource.connect(recordingDestination);
+
   // const audioBuffer = await audioContext.decodeAudioData(ab);
-
-  const video = document.getElementById("video") as HTMLVideoElement;
-  const btnStop = document.getElementById("stop") as HTMLButtonElement;
-  const btnPlay = document.getElementById("play") as HTMLButtonElement;
-  const btnRecord = document.getElementById("record") as HTMLButtonElement;
-
+  let recorder: MediaRecorder;
   let isRecording = false;
 
-  // console.log(recording.mediaStream.getTracks());
+  const video = document.getElementById("video") as HTMLVideoElement;
+  const audio = document.getElementById("recording") as HTMLAudioElement;
+  // const btnStop = document.getElementById("stop") as HTMLButtonElement;
+  // const btnPlay = document.getElementById("play") as HTMLButtonElement;
+  const btnRecord = document.getElementById("record") as HTMLButtonElement;
 
   video.addEventListener("canplay", async () => {
-    // listen to backing
+    // btnPlay.addEventListener("click", () => {
+    //   video.play();
+    // });
     const backing = audioContext.createMediaElementSource(video);
-    const recording = audioContext.createMediaStreamSource(s);
-    backing.connect(audioContext.destination);
-
-    // record play along
-    const dest = audioContext.createMediaStreamDestination();
-    recording.connect(dest);
-    backing.connect(dest);
-    let recorder: MediaRecorder;
-    // console.log(s.getAudioTracks()[0].getConstraints());
-    // recording.connect(audioContext.destination);
-    btnPlay.addEventListener("click", () => {
-      video.play();
-    });
 
     btnRecord.addEventListener("click", () => {
+      if (isRecording) {
+        isRecording = false;
+        btnRecord.innerHTML = "start recording";
+        video.pause();
+        recorder.stop();
+        return;
+      }
+      btnRecord.innerHTML = "stop recording";
+
+      // get audiostream from video
+      // connect to output so you can hear it
+      backing.connect(audioContext.destination);
+      // connect to recording destination
+      backing.connect(recordingDestination);
+
       video.play();
-      recorder = new MediaRecorder(new MediaStream(dest.stream));
+
+      recorder = new MediaRecorder(recordingDestination.stream);
       recorder.ondataavailable = async (event: { data: BlobPart }) => {
         const blob = new Blob([event.data], { type: "video/webm" });
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("A") as HTMLAnchorElement;
-        a.href = url;
-        a.download = url;
-        a.click();
-        window.URL.revokeObjectURL(url);
+        audio.src = url;
+        // const a = document.createElement("A") as HTMLAnchorElement;
+        // a.href = url;
+        // a.download = url;
+        // a.click();
+        // window.URL.revokeObjectURL(url);
       };
       recorder.start();
       isRecording = true;
     });
 
-    btnStop.addEventListener("click", () => {
-      video.pause();
-      if (isRecording === true) {
-        recorder.stop();
-        isRecording = false;
-      }
-    });
+    // btnStop.addEventListener("click", () => {
+    //   video.pause();
+    //   if (isRecording === true) {
+    //     // video.muted = false;
+    //     recorder.stop();
+    //     isRecording = false;
+    //   }
+    // });
   });
 
   video.src = "./95BPM.mp4";
