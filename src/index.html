@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>glTF</title>
+    <title>recorder</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta
       name="viewport"
@@ -10,10 +10,13 @@
   </head>
 
   <body>
+    <video id="video" controls></video>
     <div id="controls">
-      <button id="play">play</button>
+      <!-- <button id="play">play</button> -->
+      <button id="record">start recording</button>
+      <!-- <button id="stop">stop</button> -->
     </div>
-    <div id="video"></div>
+    <audio id="recording" controls></audio>
     <script src="./bundle.js"></script>
   </body>
 </html>
