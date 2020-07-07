@@ -27,7 +27,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config ./webpack.config.js",
-    "dev": "webpack-dev-server --display-error-details --https --cert private.pem --key private.key"
+    "dev": "webpack-dev-server --display-error-details",
+    "devs": "webpack-dev-server --display-error-details --https --cert private.pem --key private.key"
   },
   "repository": {
     "type": "git",

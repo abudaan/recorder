@@ -45,7 +45,7 @@ const init = async (): Promise<void> => {
       // connect to output so you can hear it
       backing.connect(audioContext.destination);
       // connect to recording destination
-      backing.connect(recordingDestination);
+      // backing.connect(recordingDestination);
 
       video.play();
 
