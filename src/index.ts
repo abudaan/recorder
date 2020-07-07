@@ -51,9 +51,10 @@ const init = async (): Promise<void> => {
 
       recorder = new MediaRecorder(recordingDestination.stream);
       recorder.ondataavailable = async (event: { data: BlobPart }) => {
-        const blob = new Blob([event.data], { type: "video/webm" });
+        const blob = new Blob([event.data], { type: "audio/ogg; codecs=opus" });
         const url = window.URL.createObjectURL(blob);
         audio.src = url;
+        console.log("data available");
         // const a = document.createElement("A") as HTMLAnchorElement;
         // a.href = url;
         // a.download = url;
