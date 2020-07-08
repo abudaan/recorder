@@ -24,20 +24,21 @@ const init = async (): Promise<void> => {
   const audioTrackVideo = audioContext.createMediaElementSource(video);
   const recorder = new MediaRecorder(recordingDestination.stream);
   audioTrackVideo.connect(audioContext.destination);
+  audioTrackVideo.connect(recordingDestination);
 
   let isRecording = false;
-  let softwareMixing = false;
+  let hardwareMixing = false;
 
   video.src = "./95BPM.mp4";
 
   inputRouting.addEventListener("change", (e) => {
-    softwareMixing = (e.target as HTMLInputElement).checked;
+    hardwareMixing = (e.target as HTMLInputElement).checked;
     try {
-      if (softwareMixing) {
+      if (hardwareMixing) {
         // add audio track of video to recording
-        audioTrackVideo.connect(recordingDestination);
-      } else {
         audioTrackVideo.disconnect(recordingDestination);
+      } else {
+        audioTrackVideo.connect(recordingDestination);
       }
     } catch (e) {
       console.log(e);
