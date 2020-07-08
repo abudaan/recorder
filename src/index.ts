@@ -26,12 +26,22 @@ const init = async (): Promise<void> => {
   audioTrackVideo.connect(audioContext.destination);
 
   let isRecording = false;
-  let hardwareMixing = false;
+  let softwareMixing = false;
 
   video.src = "./95BPM.mp4";
 
   inputRouting.addEventListener("change", (e) => {
-    hardwareMixing = (e.target as HTMLInputElement).checked;
+    softwareMixing = (e.target as HTMLInputElement).checked;
+    try {
+      if (softwareMixing) {
+        // add audio track of video to recording
+        audioTrackVideo.connect(recordingDestination);
+      } else {
+        audioTrackVideo.disconnect(recordingDestination);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   btnRecord.addEventListener("click", () => {
@@ -43,23 +53,11 @@ const init = async (): Promise<void> => {
       recorder.stop();
       video.pause();
       video.currentTime = 0;
-      if (hardwareMixing) {
-        try {
-          audioTrackVideo.disconnect(recordingDestination);
-        } catch (e) {
-          // console.log(e);
-        }
-      }
       recordingSource.disconnect(recordingDestination);
       return;
     }
 
     btnRecord.innerHTML = "stop recording";
-    console.log(hardwareMixing);
-    if (hardwareMixing === false) {
-      // add audio track of video to recording
-      audioTrackVideo.connect(recordingDestination);
-    }
     recordingSource.connect(recordingDestination);
 
     recorder.ondataavailable = async (event: { data: BlobPart }) => {
