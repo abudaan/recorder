@@ -2,11 +2,29 @@ import "./styles/index.scss";
 
 const init = async (): Promise<void> => {
   const video = document.getElementById("video") as HTMLVideoElement;
-  const audio = document.getElementById("recording") as HTMLAudioElement;
-  // const btnStop = document.getElementById("stop") as HTMLButtonElement;
-  // const btnPlay = document.getElementById("play") as HTMLButtonElement;
+  const listRecordings = document.getElementById("recordings") as HTMLDivElement;
   const btnRecord = document.getElementById("record") as HTMLButtonElement;
   const inputRouting = document.getElementById("routing") as HTMLInputElement;
+
+  const addRecording = (event: BlobEvent) => {
+    const blob = new Blob([event.data], { type: "audio/ogg; codecs=opus" });
+    const url = window.URL.createObjectURL(blob);
+    const audio = document.createElement("audio") as HTMLAudioElement;
+    audio.src = url;
+    audio.controls = true;
+    const btnDelete = document.createElement("button") as HTMLButtonElement;
+    btnDelete.innerHTML = "delete";
+    btnDelete.addEventListener("click", (e: InputEvent) => {
+      const target = e.target as HTMLButtonElement;
+      const audio = target.previousSibling as HTMLAudioElement;
+      window.URL.revokeObjectURL(audio.src);
+      target.parentNode.parentNode.removeChild(target.parentNode);
+    });
+    const article = document.createElement("article");
+    article.appendChild(audio);
+    article.appendChild(btnDelete);
+    listRecordings.appendChild(article);
+  };
 
   const streamMic = await navigator.mediaDevices.getUserMedia({
     audio: {
@@ -34,8 +52,10 @@ const init = async (): Promise<void> => {
   inputRouting.addEventListener("change", (e) => {
     hardwareMixing = (e.target as HTMLInputElement).checked;
     try {
+      // hardware mixing means that the signal of your microphone and the audio of the
+      // video are mixed on your sound card, so when hardware mixing is enabled we don't
+      // have to add the audio of teh video to the MediaStream that we send to MediaRecorder
       if (hardwareMixing) {
-        // add audio track of video to recording
         audioTrackVideo.disconnect(recordingDestination);
       } else {
         audioTrackVideo.connect(recordingDestination);
@@ -46,8 +66,6 @@ const init = async (): Promise<void> => {
   });
 
   btnRecord.addEventListener("click", () => {
-    // route to speakers/headphones
-
     if (isRecording) {
       isRecording = false;
       btnRecord.innerHTML = "start recording";
@@ -61,50 +79,14 @@ const init = async (): Promise<void> => {
     btnRecord.innerHTML = "stop recording";
     recordingSource.connect(recordingDestination);
 
-    recorder.ondataavailable = async (event: { data: BlobPart }) => {
-      const blob = new Blob([event.data], { type: "audio/ogg; codecs=opus" });
-      const url = window.URL.createObjectURL(blob);
-      audio.src = url;
-      // const a = document.createElement("A") as HTMLAnchorElement;
-      // a.href = url;
-      // a.download = url;
-      // a.click();
-      // window.URL.revokeObjectURL(url);
+    recorder.ondataavailable = async (event: BlobEvent) => {
+      addRecording(event);
     };
 
     video.play();
     recorder.start();
     isRecording = true;
   });
-
-  // btnPlay.addEventListener("click", () => {
-  //   video.play();
-  // });
-
-  // btnStop.addEventListener("click", () => {
-  //   video.pause();
-  //   if (isRecording === true) {
-  //     // video.muted = false;
-  //     recorder.stop();
-  //     isRecording = false;
-  //   }
-  // });
-
-  // video.addEventListener("canplay", async () => {
-  // });
-
-  // video.srcObject = s;
-  // video.play();
-  // video.muted = true;
-  // s.getTracks().forEach(track => {
-  //   if (track.kind === "video") {
-  //     const settings = track.getSettings();
-  //     videoWidth = settings.width;
-  //     videoHeight = settings.height;
-  //   }
-  // });
-
-  // source.connect(audioCtx.destination);
 };
 
 document.addEventListener("DOMContentLoaded", init);

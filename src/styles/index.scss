@@ -8,3 +8,17 @@ html {
   width: 800px;
   height: auto;
 }
+
+#controls {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+article {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  margin-bottom: 2px;
+}
