@@ -4,9 +4,10 @@
   "description": "record audio stream from mic and mix it local audio in the browser",
   "main": "index.ts",
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@types/dom-mediacapture-record": "^1.0.7",
-    "@typescript-eslint/parser": "^3.5.0"
+    "@typescript-eslint/eslint-plugin": "^3.5.0",
+    "@typescript-eslint/parser": "^3.5.0",
+    "webrtc-adapter": "^7.6.3"
   },
   "devDependencies": {
     "css-loader": "^3.6.0",

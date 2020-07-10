@@ -1,4 +1,7 @@
+import adapter from "webrtc-adapter";
 import "./styles/index.scss";
+
+console.log(adapter.browserDetails);
 
 const init = async (): Promise<void> => {
   const video = document.getElementById("video") as HTMLVideoElement;

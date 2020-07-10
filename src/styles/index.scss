@@ -12,10 +12,11 @@ html {
 #controls {
   display: flex;
   flex-direction: row;
-  align-content: center;
-  justify-content: center;
+  align-items: center;
+  // justify-content: center;
   margin-bottom: 2px;
 }
+
 article {
   display: flex;
   flex-direction: row;
