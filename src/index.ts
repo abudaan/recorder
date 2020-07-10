@@ -40,9 +40,9 @@ const init = async (): Promise<void> => {
   });
 
   const audioContext = new AudioContext();
-  const recordingSource = audioContext.createMediaStreamSource(streamMic);
-  const recordingDestination = audioContext.createMediaStreamDestination();
   const audioTrackVideo = audioContext.createMediaElementSource(video);
+  const microphoneInput = audioContext.createMediaStreamSource(streamMic);
+  const recordingDestination = audioContext.createMediaStreamDestination();
   const recorder = new MediaRecorder(recordingDestination.stream);
   audioTrackVideo.connect(audioContext.destination);
   audioTrackVideo.connect(recordingDestination);
@@ -75,12 +75,12 @@ const init = async (): Promise<void> => {
       recorder.stop();
       video.pause();
       video.currentTime = 0;
-      recordingSource.disconnect(recordingDestination);
+      microphoneInput.disconnect(recordingDestination);
       return;
     }
 
     btnRecord.innerHTML = "stop recording";
-    recordingSource.connect(recordingDestination);
+    microphoneInput.connect(recordingDestination);
 
     recorder.ondataavailable = async (event: BlobEvent) => {
       addRecording(event);
