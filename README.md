@@ -37,8 +37,12 @@ And Chrome only adds the first audio track.
 
 ## Browser and OS support
 
-Works best on MacOS. Sometimes Chrome > 81 has issues.
+When you record audio from your microphone there is latency; this is the time it takes the signal to travel from your microphone, to your soundcard, through the A/D converter, to your computer, to your browser and all the way back to the D/A converter to finally arrive in your headphones. This latency is dependent on your soundcard and the drivers of that soundcard. Nowadays soundcard drivers aren't very common anymore; on Windows WindowsAudio takes care of your soundcard and on MacOS it is handled by CoreAudio. On Linux it is usually handled by ALSA.
+
+CoreAudio does an amazing job; even with very cheap soundcard you get a very low latency. On Windows the results vary; in general you get lower latency with better cards. On Linux the latency is dependent on many factors; best results are to be expected with low-latency kernels or distributions that are tailored to media production such as [Ubuntu Studio](https://ubuntustudio.org/) or [64Studio](https://64studio.com/).
+
+![latency](latency.png "Visible latency in Audacity")
 
 Live example:
 
-https://abudaan.github.io/recorder/dist/
+<https://abudaan.github.io/recorder/dist/>
