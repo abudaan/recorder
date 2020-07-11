@@ -17,7 +17,14 @@ audioTrackVideo.connect(audioContext.destination);
 const recorder = new MediaRecorder(recordingDestination.stream);
 ```
 
-What happens here is that we first try to get access to the audio stream from your microphone (1), then we convert both the audio stream from your microphone and from the video element to AudioNode instances (2) so we are able to route them (add them to an audio routing graph). We create a destination that accepts stream (3). We connect both streams to this new destination (4) and feed this combined stream to the MediaRecorder.
+What happens here is that we first try to get access to the audio stream from your microphone (1), then we convert both the audio stream from your microphone and from the video element to AudioNode instances (2) so we are able to route them (add them to an audio routing graph). We create a destination that accepts streams (3). We connect both streams to this new destination (4) and feed this combined stream to the MediaRecorder.
+
+Another approach that theoretically would work is:
+
+```typescript
+```
+
+> MediaRecorder does not support recording multiple tracks of the same type at this time.
 
 ## browser and os support
 
