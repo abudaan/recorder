@@ -1,5 +1,3 @@
-# Recorder
-
 Record audio from your microphone and mix it with local audio in the browser.
 
 When you press record the video will start playing and the both the audio from the video and the audio from your microphone will be recorded. I have used the MediaRecorder for this:
@@ -41,8 +39,18 @@ When you record audio from your microphone there is latency; this is the time it
 
 CoreAudio does an amazing job; even with very cheap soundcard you get a very low latency. On Windows the results vary; in general you get lower latency with better cards. On Linux the latency is dependent on many factors; best results are to be expected with low-latency kernels or distributions that are tailored to media production such as [Ubuntu Studio](https://ubuntustudio.org/) or [64Studio](https://64studio.com/).
 
+You can visualize your latency by checking "debug"; this will pan the drumtrack to the right and your recording to the left. In the picture below you see the pre-count and then I start clapping along with the drumtrack.
+
 ![latency](latency.png "Visible latency in Audacity")
 
-Live example:
+When I zoom in you see the latency is about 200ms:
+
+![latency zoom](latency-zoomed.png "Humongous latency!")
+
+This amount of latency is completely unworkable and therefor I have added the option to do the mixing on your hardware, i.e. on your soundcard. Some soundcards have the option to route the USB output signal from the computer back into the computer as an input. By doing so you can mix the microphone input together with the drumtrack on your soundcard and send it to the computer as a single source.
+
+If you check "mix on hardware" the audio of the video (the drumtrack) will not be connected to the `recordingDestination` because it is already mixed in the signal coming from `microphoneInput`, see code example above.
+
+## Live example
 
 <https://abudaan.github.io/recorder/dist/>
