@@ -35,11 +35,11 @@ And Chrome only adds the first audio track.
 
 ## Browser and OS support
 
-When you record audio from your microphone there is latency; this is the time it takes the signal to travel from your microphone, to your soundcard, through the A/D converter, to your computer, to your browser and all the way back to the D/A converter to finally arrive in your headphones. This latency is dependent on your soundcard and the drivers of that soundcard. Nowadays soundcard drivers aren't very common anymore; on Windows WindowsAudio takes care of your soundcard and on MacOS it is handled by CoreAudio. On Linux it is usually handled by ALSA.
+When you record audio from your microphone there is latency; this is the time it takes the signal to travel from your microphone, to your soundcard, through the A/D converter, to your computer, to your browser. The amount of latency is dependent on your soundcard and the sound service of your OS. The sound service handles the communication between the OS and your soundcard; on Windows it is called WindowsAudio, on MacOS CoreAudio and on Linux it is usually handled by ALSA.
 
-CoreAudio does an amazing job; even with very cheap soundcard you get a very low latency. On Windows the results vary; in general you get lower latency with better cards. On Linux the latency is dependent on many factors; best results are to be expected with low-latency kernels or distributions that are tailored to media production such as [Ubuntu Studio](https://ubuntustudio.org/) or [64Studio](https://64studio.com/).
+CoreAudio does an amazing job; even with the builtin card you get a very low latency. On Windows the results vary; in general you get lower latency with better cards. On Linux the latency is dependent on many factors; best results are to be expected with low-latency kernels or distributions that are tailored to media production such as [Ubuntu Studio](https://ubuntustudio.org/).
 
-You can visualize your latency by checking "debug"; this will pan the drumtrack to the right and your recording to the left. In the picture below you see the pre-count and then I start clapping along with the drumtrack.
+You can visualize your latency by checking "debug"; this will pan the drumtrack to the right channel and your recording to the left channel. In the picture below you see the waveform in Audacity: you can see the 4 spikes of the pre-count and then I start clapping along with the drumtrack.
 
 ![latency](latency.png "Visible latency in Audacity")
 
@@ -50,6 +50,11 @@ When I zoom in you see the latency is about 200ms:
 This amount of latency is completely unworkable and therefor I have added the option to do the mixing on your hardware, i.e. on your soundcard. Some soundcards have the option to route the USB output signal from the computer back into the computer as an input. By doing so you can mix the microphone input together with the drumtrack on your soundcard and send it to the computer as a single source.
 
 If you check "mix on hardware" the audio of the video (the drumtrack) will not be connected to the `recordingDestination` because it is already mixed in the signal coming from `microphoneInput`, see code example above.
+
+I have tested the hardware mixing option with these 2 soundcards from Behringer:
+
+- [Xenyx 302USB](https://www.behringer.com/behringer/product?modelCode=P0ADV)
+- [Xenyx Q502USB](https://www.behringer.com/behringer/product?modelCode=P0ALL)
 
 ## Live example
 
